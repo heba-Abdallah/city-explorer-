@@ -1,11 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-<<<<<<< HEAD
 import Form from 'react-bootstrap/Form';
-=======
-
 import Form from 'react-bootstrap/Form'
->>>>>>> 3c16c15afe17dadde65746f16535d4d2cfcbd7e5
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
@@ -102,4 +98,3 @@ class App extends React.Component {
 
 }
 export default App;
-
