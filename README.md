@@ -1,3 +1,9 @@
+# Project Name
+## City Explorer
+
+**Author**: Heba Essam Abdallah
+**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
