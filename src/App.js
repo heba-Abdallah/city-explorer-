@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
@@ -19,6 +18,7 @@ class App extends React.Component {
       locData: '',
       displayMap: false,
       errorMessage: false,
+      cityInfo:{},
     }
   }
   getLocation = async (e) => {
@@ -56,6 +56,18 @@ class App extends React.Component {
     console.log('heba', this.state.searchQuery);
   }
 
+  getCityData =async ()=>{
+    let serverRoute = process.env.REACT_APP_SERVER;
+
+    const url = `${serverRoute}/getLocation?city_name=Amman`;
+    console.log('1',url);
+    const citeItem = await axios.get(url);
+    console.log('2',citeItem);
+    this.setState({
+      cityInfo: citeItem
+    })
+
+  }
   render() {
     return (
       <>
@@ -72,6 +84,8 @@ class App extends React.Component {
             Explore!
            </Button>
         </Form>
+        <button  onClick={this.getCityData}>data</button>
+        <p>{this.state.cityInfo.city_name}</p>
 
         {this.state.displayMap &&
 
