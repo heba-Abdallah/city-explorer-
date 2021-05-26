@@ -2,9 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import dotenv from 'dotenv';
+import Weather from './weather';
 
 
 
@@ -18,11 +20,16 @@ class App extends React.Component {
       locData: '',
       displayMap: false,
       errorMessage: false,
-      cityInfo:{},
+      cityInfo: {},
+      weatherData: [],
+      showWeather: false,
     }
   }
   getLocation = async (e) => {
     e.preventDefault();
+
+
+    let serverRoute = process.env.REACT_APP_SERVER;
 
     let locUrl = `https://eu1.locationiq.com/v1/search.php?key=pk.8a6d5abe582c530444a1a198f0341145&q=${this.state.searchQuery}&format=json`
 
@@ -47,6 +54,23 @@ class App extends React.Component {
         errorMessage: true,
       })
     }
+    try {
+      const url = `${serverRoute}/getLocation?city_name=${this.state.searchQuery}`;
+      let infoData = await axios.get(url);
+
+      this.setState({
+        weatherData: infoData.data,
+        showWeather: true,
+
+      })
+
+    }
+    catch (error) {
+      this.setState({
+        weatherData: error.response,
+        showWeather: false
+      })
+    }
   }
 
   updateSearchQuery = (event) => {
@@ -56,18 +80,6 @@ class App extends React.Component {
     console.log('heba', this.state.searchQuery);
   }
 
-  getCityData =async ()=>{
-    let serverRoute = process.env.REACT_APP_SERVER;
-
-    const url = `${serverRoute}/getLocation?city_name=Amman`;
-    console.log('1',url);
-    const citeItem = await axios.get(url);
-    console.log('2',citeItem);
-    this.setState({
-      cityInfo: citeItem
-    })
-
-  }
   render() {
     return (
       <>
@@ -84,8 +96,7 @@ class App extends React.Component {
             Explore!
            </Button>
         </Form>
-        <button  onClick={this.getCityData}>data</button>
-        <p>{this.state.cityInfo.city_name}</p>
+        
 
         {this.state.displayMap &&
 
@@ -99,13 +110,17 @@ class App extends React.Component {
         }
         {this.state.errorMessage &&
 
-        <Alert variant="success">
+          <Alert variant="success">
             <p>
               error in getting the data
           </p>
-          
-        </Alert>
-  }
+
+          </Alert>
+        }
+
+        {this.displayMap &&
+        <Weather weatherData={this.state.weatherData} showWeather={this.state.showWeather}/>
+        }
       </>
     )
   }
