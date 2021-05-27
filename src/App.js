@@ -5,10 +5,10 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Alert from 'react-bootstrap/Alert';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import dotenv from 'dotenv';
-import Weather from './weather';
 
 
+let serverRoute = process.env.REACT_APP_SERVER;
+console.log('hi',serverRoute);
 
 class App extends React.Component {
 
@@ -29,13 +29,12 @@ class App extends React.Component {
     e.preventDefault();
 
 
-    let serverRoute = process.env.REACT_APP_SERVER;
 
     let locUrl = `https://eu1.locationiq.com/v1/search.php?key=pk.8a6d5abe582c530444a1a198f0341145&q=${this.state.searchQuery}&format=json`
 
     try {
       let locResult = await axios.get(locUrl);
-      console.log('hi', locResult.data);
+      // console.log('hi', locResult.data);
 
 
       for (let i = 0; i < locResult.data.length; i++) {
@@ -43,10 +42,10 @@ class App extends React.Component {
           locData: locResult.data[i],
           displayMap: true,
         })
-        console.log('i', locResult.data[i]);
+        // console.log('i', locResult.data[i]);
 
       }
-      console.log('hello', this.state.locData);
+      // console.log('hello', this.state.locData);
     }
     catch {
       this.setState({
@@ -54,22 +53,31 @@ class App extends React.Component {
         errorMessage: true,
       })
     }
+    console.log('serverRoute', serverRoute);
     try {
       const url = `${serverRoute}/getLocation?city_name=${this.state.searchQuery}`;
+      // const url = `http://localhost:3001/getLocation?city_name=Amman`;
       let infoData = await axios.get(url);
+      console.log('url', url);
+      console.log('info', infoData.data);
+
+
+      // console.log('info',weatherData);
 
       this.setState({
         weatherData: infoData.data,
         showWeather: true,
+
 
       })
 
     }
     catch (error) {
       this.setState({
-        weatherData: error.response,
-        showWeather: false
+        // weatherData: error.response,
+        showWeather: false,
       })
+      console.log('sljdfhku')
     }
   }
 
@@ -77,7 +85,7 @@ class App extends React.Component {
     this.setState({
       searchQuery: event.target.value
     })
-    console.log('heba', this.state.searchQuery);
+    // console.log('heba', this.state.searchQuery);
   }
 
   render() {
@@ -96,7 +104,7 @@ class App extends React.Component {
             Explore!
            </Button>
         </Form>
-        
+
 
         {this.state.displayMap &&
 
@@ -114,13 +122,12 @@ class App extends React.Component {
             <p>
               error in getting the data
           </p>
-
           </Alert>
         }
-
-        {this.displayMap &&
-        <Weather weatherData={this.state.weatherData} showWeather={this.state.showWeather}/>
-        }
+        { this.state.weatherData.map((item, idx) => {
+          return <p key={idx}>{item.date} and {item.description}</p>
+        })}
+        <p>{this.state.item}</p>
       </>
     )
   }
